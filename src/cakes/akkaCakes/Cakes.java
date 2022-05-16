@@ -47,9 +47,9 @@ class Alice extends Producer<Wheat> {
 
                 .match(Wheat.class, T -> products.add(T))
                 .match(String.class, s -> s.equalsIgnoreCase("MakeOne"), s -> {
-                    if (products.size() >= maxSize) { //list is full
+                    if (products.size() >= maxSize) { //List is full
                         running = false;
-                    } else { //list is not full
+                    } else { //List is not full
                         ActorRef me = self();
                         CompletableFuture<Wheat> futureProduct = make();
                         futureProduct.thenAcceptAsync(wheat -> {
@@ -61,14 +61,14 @@ class Alice extends Producer<Wheat> {
                 .match(String.class, s -> s.equalsIgnoreCase("GiveOne"), s -> { //GiveOne
                     ActorRef sender = sender();
 
-                    if (products.isEmpty()) { //"sorry, the list is empty, I'll make one and send it to you in the FUTURE"
+                    if (products.isEmpty()) { //If the list is empty, make one and send it in the future
                         make().thenAcceptAsync(wheat -> sender.tell(wheat, self()));
                     } else {
                         if (!running) {
                             running = true;
                             self().tell("MakeOne", self());
                         }
-                        sender.tell(products.poll(), self()); //Here's the wheat
+                        sender.tell(products.poll(), self()); //Sending Wheat object
                     }
                 })
                 .build();
@@ -92,13 +92,11 @@ class Bob extends Producer<Sugar> {
 
     public Receive createReceive() {
         return receiveBuilder()
-                .match(Sugar.class, T -> {
-                    products.add(T);
-                })
+                .match(Sugar.class, T -> products.add(T))
                 .match(String.class, s -> s.equalsIgnoreCase("MakeOne"), s -> {
-                    if (products.size() >= maxSize) { //list is full
+                    if (products.size() >= maxSize) { //List is full
                         running = false;
-                    } else { //list is not full
+                    } else { //List is not full
                         ActorRef me = self();
                         CompletableFuture<Sugar> futureProduct = make();
                         futureProduct.thenAcceptAsync(sugar -> {
@@ -109,14 +107,14 @@ class Bob extends Producer<Sugar> {
                 })
                 .match(String.class, s -> s.equalsIgnoreCase("GiveOne"), s -> {
                     ActorRef sender = sender();
-                    if (products.isEmpty()) { //"sorry, the list is empty, I'll make one and send it to you in the FUTURE"
+                    if (products.isEmpty()) { //If the list is empty, make one and send it in the future
                         make().thenAcceptAsync(sugar -> sender.tell(sugar, self()));
                     } else {
                         if (!running) {
                             running = true;
                             self().tell("MakeOne", self());
                         }
-                        sender.tell(products.poll(), self()); //Here's the sugar
+                        sender.tell(products.poll(), self()); //Sending Sugar object
                     }
                 })
                 .build();
@@ -149,27 +147,21 @@ class Charles extends Producer<Cake> {
 
     public Receive createReceive() {
         return receiveBuilder()
-                .match(Wheat.class, T -> { //T
-                    ws.add(T);
-                })
-                .match(Sugar.class, T -> { //T
-                    ss.add(T);
-                })
-                .match(Cake.class, T -> { //T
-                    products.add(T);
-                })
+                .match(Wheat.class, T -> ws.add(T))
+                .match(Sugar.class, T -> ss.add(T))
+                .match(Cake.class, T -> products.add(T))
                 .match(String.class, s -> s.equalsIgnoreCase("MakeOne"), s -> {
-                    //first, get ingredients
+                    //First, get the ingredients
                     CompletableFuture<?> getWheat = Patterns.ask(alice, "GiveOne",
                             Duration.ofMillis(100000)).toCompletableFuture();
 
                     CompletableFuture<?> getSugar = Patterns.ask(bob, "GiveOne",
                             Duration.ofMillis(100000)).toCompletableFuture();
 
-                    //Second, make cakes
-                    if (products.size() >= maxSize) { //list is full
+                    //Second, make the cakes
+                    if (products.size() >= maxSize) { //List is full
                         running = false;
-                    } else { //list is not full
+                    } else { //List is not full
                         ActorRef me = self();
                         CompletableFuture<Cake> futureProduct = make();
                         futureProduct.thenAcceptAsync(cake -> {
@@ -180,23 +172,21 @@ class Charles extends Producer<Cake> {
                 })
                 .match(String.class, s -> s.equalsIgnoreCase("GiveOne"), s -> {
                     ActorRef sender = sender();
-                    if (products.isEmpty()) { //"sorry, the list is empty, I'll make one and send it to you in the FUTURE"
+                    if (products.isEmpty()) { //If the list is empty, make one and send it in the future
                         make().thenAcceptAsync(cake -> sender.tell(cake, self()));
                     } else {
-                        if (!running) { //I
+                        if (!running) {
                             running = true;
                             self().tell("MakeOne", self());
                         }
-                        sender.tell(products.poll(), self()); //Here's the cake
+                        sender.tell(products.poll(), self()); //Sending Cake object
                     }
                 }).build();
     }
 
     @Override
     public CompletableFuture<Cake> make() {
-        return CompletableFuture.supplyAsync(() -> {
-            return new Cake(ss.poll(), ws.poll());
-        });
+        return CompletableFuture.supplyAsync(() -> new Cake(ss.poll(), ws.poll()));
     }
 }
 
@@ -262,32 +252,30 @@ public class Cakes {
                 //Alice stays local
         ));
 
-        //=====MAKE CAKE=====//
-        ActorRef bobOne = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobOne"); //makes sugar
-
         ActorRef alice = s.actorOf(Props.create(Alice.class, () -> new Alice(1000)), "Alice"); //makes wheat
 
-        //makes cakes with wheat and sugar
-        ActorRef charles = s.actorOf(Props.create(Charles.class, () -> new Charles(1000, bobOne, alice)), "Charles");
+        ActorRef bob = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobOne"); //makes sugar
+
+
+        //Makes cake with wheat and sugar
+        ActorRef charles = s.actorOf(Props.create(Charles.class, () -> new Charles(1000, bob, alice)), "Charles");
 
         //tim wants to eat cakes
         ActorRef tim = s.actorOf(Props.create(Tim.class, () -> new Tim(hunger, charles)), "Tim");
 
-        //Begin!
+        //Begin measuring the time taken to complete
         long initialTimeStamp = System.currentTimeMillis();
 
         CompletableFuture<Object> gift = Patterns.ask(tim, new GiftRequest(), Duration.ofMillis(100000000)).toCompletableFuture();
 
         try {
-            //wait until the "gift" task is complete...
+            //Waiting until the gift task is complete
             return (Gift) gift.join();
-        }
-        //...then...
-        finally {
+        } finally {
             System.out.println("Result: " + (System.currentTimeMillis() - initialTimeStamp));
-            //...Murder them all with a PoisonPill, sent by no one.
+            //When complete, murder them all with a PoisonPill sent by no one.
             alice.tell(PoisonPill.getInstance(), ActorRef.noSender());
-            bobOne.tell(PoisonPill.getInstance(), ActorRef.noSender());
+            bob.tell(PoisonPill.getInstance(), ActorRef.noSender());
             charles.tell(PoisonPill.getInstance(), ActorRef.noSender());
             tim.tell(PoisonPill.getInstance(), ActorRef.noSender());
             s.terminate();
