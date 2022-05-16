@@ -290,17 +290,18 @@ public class Cakes {
 
     public static Gift computeGift(int hunger) {
         ActorSystem s = AkkaConfig.newSystem("Cakes", 2501, Map.of(
-                "Tim", "192.168.56.1",
-                "Bob", "192.168.56.1",
-                "Charles", "192.168.56.1"
+//                Comment out IP Addresses to work on assignment locally.
+//                "Tim", "192.168.56.1",
+//                "Bob", "192.168.56.1",
+//                "Charles", "192.168.56.1"
                 //Alice stays local
         ));
 
         //=====MAKE CAKE=====//
         ActorRef bobOne = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobOne"); //makes sugar
-        ActorRef bobTwo = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobTwo"); //makes sugar
-        ActorRef bobThree = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobThree"); //makes sugar
-        ActorRef bobFour = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobFour"); //makes sugar
+//        ActorRef bobTwo = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobTwo"); //makes sugar
+//        ActorRef bobThree = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobThree"); //makes sugar
+//        ActorRef bobFour = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobFour"); //makes sugar
 
         ActorRef alice = s.actorOf(Props.create(Alice.class, () -> new Alice(1000)), "Alice"); //makes wheat
 
@@ -330,9 +331,9 @@ public class Cakes {
             //...Murder them all with a PoisonPill, sent by no one.
             alice.tell(PoisonPill.getInstance(), ActorRef.noSender());
             bobOne.tell(PoisonPill.getInstance(), ActorRef.noSender());
-            bobTwo.tell(PoisonPill.getInstance(), ActorRef.noSender());
-            bobThree.tell(PoisonPill.getInstance(), ActorRef.noSender());
-            bobFour.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//            bobTwo.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//            bobThree.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//            bobFour.tell(PoisonPill.getInstance(), ActorRef.noSender());
             charles.tell(PoisonPill.getInstance(), ActorRef.noSender());
             tim.tell(PoisonPill.getInstance(), ActorRef.noSender());
             s.terminate();
