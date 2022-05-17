@@ -191,7 +191,7 @@ class Charles extends Producer<Cake> {
 }
 
 class Tim extends AbstractActor {
-    volatile int hunger;
+    int hunger;
     boolean running = true;
     ActorRef cakeMan;
     ActorRef originalSender;
