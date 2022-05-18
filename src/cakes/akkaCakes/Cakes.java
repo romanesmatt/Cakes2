@@ -135,15 +135,33 @@ class Charles extends Producer<Cake> {
     int maxSize;
 
     ActorRef alice;
-    ActorRef bob;
 
-    boolean running = true;
+    //    The four Bob objects
+    ActorRef bobOne;
+    ActorRef bobTwo;
+    ActorRef bobThree;
+    ActorRef bobFour;
 
-    public Charles(int maxSize, ActorRef alice, ActorRef bob) {
+    boolean isRunning = true;
+
+
+//    Constructor for Task 2 commented out
+//    public Charles(int maxSize, ActorRef alice, ActorRef bob) {
+//        this.maxSize = maxSize;
+//        this.alice = alice;
+//        this.bob = bob;
+//    }
+
+    //    Constructor for Task 3
+    public Charles(int maxSize, ActorRef alice, ActorRef bobOne, ActorRef bobTwo, ActorRef bobThree, ActorRef bobFour) {
         this.maxSize = maxSize;
         this.alice = alice;
-        this.bob = bob;
+        this.bobOne = bobOne;
+        this.bobTwo = bobTwo;
+        this.bobThree = bobThree;
+        this.bobFour = bobFour;
     }
+
 
     public Receive createReceive() {
         return receiveBuilder()
@@ -155,12 +173,21 @@ class Charles extends Producer<Cake> {
                     CompletableFuture<?> getWheat = Patterns.ask(alice, "GiveOne",
                             Duration.ofMillis(100000)).toCompletableFuture();
 
-                    CompletableFuture<?> getSugar = Patterns.ask(bob, "GiveOne",
+                    CompletableFuture<?> getSugarOne = Patterns.ask(bobOne, "GiveOne",
+                            Duration.ofMillis(100000)).toCompletableFuture();
+
+                    CompletableFuture<?> getSugarTwo = Patterns.ask(bobTwo, "GiveOne",
+                            Duration.ofMillis(100000)).toCompletableFuture();
+
+                    CompletableFuture<?> getSugarThree = Patterns.ask(bobThree, "GiveOne",
+                            Duration.ofMillis(100000)).toCompletableFuture();
+
+                    CompletableFuture<?> getSugarFour = Patterns.ask(bobFour, "GiveOne",
                             Duration.ofMillis(100000)).toCompletableFuture();
 
                     //Second, make the cakes
                     if (products.size() >= maxSize) { //List is full
-                        running = false;
+                        isRunning = false;
                     } else { //List is not full
                         ActorRef me = self();
                         CompletableFuture<Cake> futureProduct = make();
@@ -175,8 +202,8 @@ class Charles extends Producer<Cake> {
                     if (products.isEmpty()) { //If the list is empty, make one and send it in the future
                         make().thenAcceptAsync(cake -> sender.tell(cake, self()));
                     } else {
-                        if (!running) {
-                            running = true;
+                        if (!isRunning) {
+                            isRunning = true;
                             self().tell("MakeOne", self());
                         }
                         sender.tell(products.poll(), self()); //Sending Cake object
@@ -246,19 +273,23 @@ public class Cakes {
     public static Gift computeGift(int hunger) {
         ActorSystem s = AkkaConfig.newSystem("Cakes", 2501, Map.of(
 //                Comment out IP Addresses to work on assignment locally.
-//                "Tim", "192.168.56.1",
-//                "Bob", "192.168.56.1",
-//                "Charles", "192.168.56.1"
+                "Tim", "192.168.56.1",
+                "Bob", "192.168.56.1",
+                "Charles", "192.168.56.1"
                 //Alice stays local
         ));
 
         ActorRef alice = s.actorOf(Props.create(Alice.class, () -> new Alice(1000)), "Alice"); //makes wheat
 
-        ActorRef bob = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobOne"); //makes sugar
+//        Create four Bob objects to test on local machine
+        ActorRef bobOne = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobOne"); //makes sugar
+        ActorRef bobTwo = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobTwo"); //makes sugar
+        ActorRef bobThree = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobThree"); //makes sugar
+        ActorRef bobFour = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobFour"); //makes sugar
 
 
         //Makes cake with wheat and sugar
-        ActorRef charles = s.actorOf(Props.create(Charles.class, () -> new Charles(1000, bob, alice)), "Charles");
+        ActorRef charles = s.actorOf(Props.create(Charles.class, () -> new Charles(1000, bobOne, bobTwo, bobThree, bobFour, alice)), "Charles");
 
         //tim wants to eat cakes
         ActorRef tim = s.actorOf(Props.create(Tim.class, () -> new Tim(hunger, charles)), "Tim");
@@ -275,7 +306,11 @@ public class Cakes {
             System.out.println("Result: " + (System.currentTimeMillis() - initialTimeStamp));
             //When complete, murder them all with a PoisonPill sent by no one.
             alice.tell(PoisonPill.getInstance(), ActorRef.noSender());
-            bob.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//            Four Bob objects only for running on local machine
+            bobOne.tell(PoisonPill.getInstance(), ActorRef.noSender());
+            bobTwo.tell(PoisonPill.getInstance(), ActorRef.noSender());
+            bobThree.tell(PoisonPill.getInstance(), ActorRef.noSender());
+            bobFour.tell(PoisonPill.getInstance(), ActorRef.noSender());
             charles.tell(PoisonPill.getInstance(), ActorRef.noSender());
             tim.tell(PoisonPill.getInstance(), ActorRef.noSender());
             s.terminate();
