@@ -135,6 +135,8 @@ class Charles extends Producer<Cake> {
     int maxSize;
 
     ActorRef alice;
+    //    Bob object for Task 2
+    ActorRef bob;
 
     //    The four Bob objects
     ActorRef bobOne;
@@ -144,23 +146,31 @@ class Charles extends Producer<Cake> {
 
     boolean isRunning = true;
 
+    //    Allows the option of running Task 3 with the four Bob objects
+    boolean areFourBobs = false;
 
-//    Constructor for Task 2 commented out
-//    public Charles(int maxSize, ActorRef alice, ActorRef bob) {
-//        this.maxSize = maxSize;
-//        this.alice = alice;
-//        this.bob = bob;
-//    }
 
-    //    Constructor for Task 3
-    public Charles(int maxSize, ActorRef alice, ActorRef bobOne, ActorRef bobTwo, ActorRef bobThree, ActorRef bobFour) {
+    //    Constructor for Task 2
+//    Comment out for Task 3
+
+    public Charles(int maxSize, ActorRef alice, ActorRef bob) {
         this.maxSize = maxSize;
         this.alice = alice;
-        this.bobOne = bobOne;
-        this.bobTwo = bobTwo;
-        this.bobThree = bobThree;
-        this.bobFour = bobFour;
+        this.bob = bob;
     }
+
+    //    Constructor for Task 3
+//    Comment out for Task 2
+
+//    public Charles(int maxSize, ActorRef alice, ActorRef bobOne, ActorRef bobTwo, ActorRef bobThree, ActorRef bobFour) {
+//        this.maxSize = maxSize;
+//        this.alice = alice;
+//        this.bobOne = bobOne;
+//        this.bobTwo = bobTwo;
+//        this.bobThree = bobThree;
+//        this.bobFour = bobFour;
+//        this.areFourBobs = true;
+//    }
 
 
     public Receive createReceive() {
@@ -173,17 +183,25 @@ class Charles extends Producer<Cake> {
                     CompletableFuture<?> getWheat = Patterns.ask(alice, "GiveOne",
                             Duration.ofMillis(100000)).toCompletableFuture();
 
-                    CompletableFuture<?> getSugarOne = Patterns.ask(bobOne, "GiveOne",
+//                    getSugar() method for Bob object in Task 2
+                    //Comment out for Task 3
+                    CompletableFuture<?> getSugarTaskTwo = Patterns.ask(bob, "GiveOne",
                             Duration.ofMillis(100000)).toCompletableFuture();
 
-                    CompletableFuture<?> getSugarTwo = Patterns.ask(bobTwo, "GiveOne",
-                            Duration.ofMillis(100000)).toCompletableFuture();
+//                    getSugar() methods for the Bob objects in Task 3
+                    //Comment out for Task 2
 
-                    CompletableFuture<?> getSugarThree = Patterns.ask(bobThree, "GiveOne",
-                            Duration.ofMillis(100000)).toCompletableFuture();
-
-                    CompletableFuture<?> getSugarFour = Patterns.ask(bobFour, "GiveOne",
-                            Duration.ofMillis(100000)).toCompletableFuture();
+//                    CompletableFuture<?> getSugarOne = Patterns.ask(bobOne, "GiveOne",
+//                            Duration.ofMillis(100000)).toCompletableFuture();
+//
+//                    CompletableFuture<?> getSugarTwo = Patterns.ask(bobTwo, "GiveOne",
+//                            Duration.ofMillis(100000)).toCompletableFuture();
+//
+//                    CompletableFuture<?> getSugarThree = Patterns.ask(bobThree, "GiveOne",
+//                            Duration.ofMillis(100000)).toCompletableFuture();
+//
+//                    CompletableFuture<?> getSugarFour = Patterns.ask(bobFour, "GiveOne",
+//                            Duration.ofMillis(100000)).toCompletableFuture();
 
                     //Second, make the cakes
                     if (products.size() >= maxSize) { //List is full
@@ -273,23 +291,31 @@ public class Cakes {
     public static Gift computeGift(int hunger) {
         ActorSystem s = AkkaConfig.newSystem("Cakes", 2501, Map.of(
 //                Comment out IP Addresses to work on assignment locally.
-                "Tim", "192.168.56.1",
-                "Bob", "192.168.56.1",
-                "Charles", "192.168.56.1"
+//                "Tim", "192.168.56.1",
+//                "Bob", "192.168.56.1",
+//                "Charles", "192.168.56.1"
                 //Alice stays local
         ));
 
         ActorRef alice = s.actorOf(Props.create(Alice.class, () -> new Alice(1000)), "Alice"); //makes wheat
 
+//        Comment out for Task 3
+        ActorRef bob = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "Bob"); //makes sugar
+
+
 //        Create four Bob objects to test on local machine
-        ActorRef bobOne = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobOne"); //makes sugar
-        ActorRef bobTwo = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobTwo"); //makes sugar
-        ActorRef bobThree = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobThree"); //makes sugar
-        ActorRef bobFour = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobFour"); //makes sugar
+        //        Comment out for Task 2
+//        ActorRef bobOne = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobOne"); //makes sugar
+//        ActorRef bobTwo = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobTwo"); //makes sugar
+//        ActorRef bobThree = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobThree"); //makes sugar
+//        ActorRef bobFour = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "BobFour"); //makes sugar
 
 
         //Makes cake with wheat and sugar
-        ActorRef charles = s.actorOf(Props.create(Charles.class, () -> new Charles(1000, bobOne, bobTwo, bobThree, bobFour, alice)), "Charles");
+//        Comment out for Task 3
+//        ActorRef charles = s.actorOf(Props.create(Charles.class, () -> new Charles(1000, bobOne, bobTwo, bobThree, bobFour, alice)), "Charles");
+
+        ActorRef charles = s.actorOf(Props.create(Charles.class, () -> new Charles(1000, bob, alice)), "Charles");
 
         //tim wants to eat cakes
         ActorRef tim = s.actorOf(Props.create(Tim.class, () -> new Tim(hunger, charles)), "Tim");
@@ -306,11 +332,13 @@ public class Cakes {
             System.out.println("Result: " + (System.currentTimeMillis() - initialTimeStamp));
             //When complete, murder them all with a PoisonPill sent by no one.
             alice.tell(PoisonPill.getInstance(), ActorRef.noSender());
-//            Four Bob objects only for running on local machine
-            bobOne.tell(PoisonPill.getInstance(), ActorRef.noSender());
-            bobTwo.tell(PoisonPill.getInstance(), ActorRef.noSender());
-            bobThree.tell(PoisonPill.getInstance(), ActorRef.noSender());
-            bobFour.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//            Task 2: Bob object
+            bob.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//            Task 3: Four Bob objects only for running on local machine
+//            bobOne.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//            bobTwo.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//            bobThree.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//            bobFour.tell(PoisonPill.getInstance(), ActorRef.noSender());
             charles.tell(PoisonPill.getInstance(), ActorRef.noSender());
             tim.tell(PoisonPill.getInstance(), ActorRef.noSender());
             s.terminate();
