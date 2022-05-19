@@ -4,3 +4,5 @@
 .idea/runConfigurations.xml
 .idea/workspace.xml
 *.xml
+*.class
+*.xml
