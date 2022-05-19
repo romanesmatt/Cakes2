@@ -11,7 +11,12 @@
   <component name="ChangeListManager">
     <list default="true" id="3cb93102-2872-4f26-a87f-de61b902ba72" name="Changes" comment="more commits">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ass4TempTask2" beforeDir="false" afterPath="$PROJECT_DIR$/Ass4TempTask2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Alice.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Alice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Bob.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Bob.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Charles.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Charles.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Tim.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Tim.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/cakes/akkaCakes/Cakes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cakes/akkaCakes/Cakes.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,6 +44,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+  <component name="PropertiesComponent">
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/out/artifacts/task2" />
@@ -59,16 +73,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="OpenAkka" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="cakes.akkaUtils.OpenAkka" />
+      <module name="Cakes2" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cakes.akkaUtils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Cakes2.jar" type="JarApplication" temporary="true">
       <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/task2/Cakes2.jar" />
       <method v="2" />
     </configuration>
     <configuration name="task2.jar (1)" type="JarApplication" temporary="true">
       <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/task2/task2.jar" />
-      <method v="2" />
-    </configuration>
-    <configuration name="task2.jar" type="JarApplication" temporary="true">
-      <option name="JAR_PATH" value="$PROJECT_DIR$/task2.jar" />
       <method v="2" />
     </configuration>
     <configuration name="task3.jar" type="JarApplication" temporary="true">
@@ -78,10 +101,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Cakes" />
+        <item itemvalue="Application.OpenAkka" />
         <item itemvalue="JAR Application.Cakes2.jar" />
         <item itemvalue="JAR Application.task2.jar (1)" />
         <item itemvalue="JAR Application.task3.jar" />
-        <item itemvalue="JAR Application.task2.jar" />
       </list>
     </recent_temporary>
   </component>

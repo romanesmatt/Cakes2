@@ -36,7 +36,7 @@ class Alice extends Producer<Wheat> {
     Queue<Wheat> products = new ArrayDeque<>();
 
     int maxSize;
-    boolean running = true;
+    boolean isRunning= true;
 
     public Alice(int maxSize) {
         this.maxSize = maxSize;
@@ -48,7 +48,7 @@ class Alice extends Producer<Wheat> {
                 .match(Wheat.class, T -> products.add(T))
                 .match(String.class, s -> s.equalsIgnoreCase("MakeOne"), s -> {
                     if (products.size() >= maxSize) { //List is full
-                        running = false;
+                        isRunning = false;
                     } else { //List is not full
                         ActorRef me = self();
                         CompletableFuture<Wheat> futureProduct = make();
@@ -64,8 +64,8 @@ class Alice extends Producer<Wheat> {
                     if (products.isEmpty()) { //If the list is empty, make one and send it in the future
                         make().thenAcceptAsync(wheat -> sender.tell(wheat, self()));
                     } else {
-                        if (!running) {
-                            running = true;
+                        if (!isRunning) {
+                            isRunning = true;
                             self().tell("MakeOne", self());
                         }
                         sender.tell(products.poll(), self()); //Sending Wheat object
@@ -84,7 +84,7 @@ class Bob extends Producer<Sugar> {
     Queue<Sugar> products = new ArrayDeque<>();
 
     int maxSize;
-    boolean running = true;
+    boolean isRunning = true;
 
     public Bob(int maxSize) {
         this.maxSize = maxSize;
@@ -95,7 +95,7 @@ class Bob extends Producer<Sugar> {
                 .match(Sugar.class, T -> products.add(T))
                 .match(String.class, s -> s.equalsIgnoreCase("MakeOne"), s -> {
                     if (products.size() >= maxSize) { //List is full
-                        running = false;
+                        isRunning = false;
                     } else { //List is not full
                         ActorRef me = self();
                         CompletableFuture<Sugar> futureProduct = make();
@@ -110,8 +110,8 @@ class Bob extends Producer<Sugar> {
                     if (products.isEmpty()) { //If the list is empty, make one and send it in the future
                         make().thenAcceptAsync(sugar -> sender.tell(sugar, self()));
                     } else {
-                        if (!running) {
-                            running = true;
+                        if (!isRunning) {
+                            isRunning = true;
                             self().tell("MakeOne", self());
                         }
                         sender.tell(products.poll(), self()); //Sending Sugar object
@@ -155,6 +155,7 @@ class Charles extends Producer<Cake> {
                 .match(Cake.class, T -> products.add(T))
                 .match(String.class, s -> s.equalsIgnoreCase("MakeOne"), s -> {
                     //First, get the ingredients
+
                     CompletableFuture<?> getWheat = Patterns.ask(alice, "GiveOne",
                             Duration.ofMillis(100000)).toCompletableFuture();
                     CompletableFuture<?> getSugar = Patterns.ask(bob, "GiveOne",
@@ -194,7 +195,7 @@ class Charles extends Producer<Cake> {
 
 class Tim extends AbstractActor {
     int hunger;
-    boolean running = true;
+    boolean isRunning = true;
     ActorRef cakeMan;
     ActorRef originalSender;
 
@@ -205,7 +206,7 @@ class Tim extends AbstractActor {
 
     public Receive createReceive() {
         return receiveBuilder()
-                .match(GiftRequest.class, () -> running, gr -> {
+                .match(GiftRequest.class, () -> isRunning, gr -> {
                     //Main thread who wants return
                     originalSender = sender();
 
@@ -220,15 +221,14 @@ class Tim extends AbstractActor {
                                         return "Thanks! But I'm still hungry..." + hunger;
                                     });
                 })
-                .match(Cake.class, () -> running, c -> {
+                .match(Cake.class, () -> isRunning, c -> {
                     hunger -= 1;
-                    System.out.println("Thanks! But I'm still hungry..." + hunger);
 
                     if (hunger > 0) {
                         self().tell(new GiftRequest(), originalSender);
                         return;
                     }
-                    running = false;
+                    isRunning = false;
                     originalSender.tell(new Gift(), self());
                 }).build();
     }
@@ -247,10 +247,10 @@ public class Cakes {
 
     public static Gift computeGift(int hunger) {
         ActorSystem s = AkkaConfig.newSystem("Cakes", 2501, Map.of(
-//                Comment out IP Addresses to work on assignment locally.
-//                "Tim", "192.168.56.1",
-//                "Bob", "192.168.56.1",
-//                "Charles", "192.168.56.1"
+//                Comment out IP Addresses to run on assignment locally.
+                "Tim", "192.168.56.1",
+                "Bob", "192.168.56.1",
+                "Charles", "192.168.56.1"
                 //Alice stays local
         ));
 
