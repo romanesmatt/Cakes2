@@ -143,7 +143,7 @@ class Charles extends Producer<Cake> {
     ActorRef bobTwo;
     ActorRef bobThree;
     ActorRef bobFour;
-
+//
     boolean isRunning = true;
 
     //    Allows the option of running Task 3 with the four Bob objects
@@ -237,7 +237,8 @@ class Charles extends Producer<Cake> {
 
 class Tim extends AbstractActor {
     int hunger;
-    boolean running = true;
+//
+    boolean isRunning = true;
     ActorRef cakeMan;
     ActorRef originalSender;
 
@@ -248,7 +249,7 @@ class Tim extends AbstractActor {
 
     public Receive createReceive() {
         return receiveBuilder()
-                .match(GiftRequest.class, () -> running, gr -> {
+                .match(GiftRequest.class, () -> isRunning, gr -> {
                     //Main thread who wants return
                     originalSender = sender();
 
@@ -263,7 +264,7 @@ class Tim extends AbstractActor {
                                         return "Thanks! But I'm still hungry..." + hunger;
                                     });
                 })
-                .match(Cake.class, () -> running, c -> {
+                .match(Cake.class, () -> isRunning, c -> {
                     hunger -= 1;
                     System.out.println("Thanks! But I'm still hungry..." + hunger);
 
@@ -271,7 +272,7 @@ class Tim extends AbstractActor {
                         self().tell(new GiftRequest(), originalSender);
                         return;
                     }
-                    running = false;
+                    isRunning = false;
                     originalSender.tell(new Gift(), self());
                 }).build();
     }
