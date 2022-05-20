@@ -248,9 +248,9 @@ public class Cakes {
     public static Gift computeGift(int hunger) {
         ActorSystem s = AkkaConfig.newSystem("Cakes", 2501, Map.of(
 //                Comment out IP Addresses to run on assignment locally.
-                "Tim", "192.168.56.1",
-                "Bob", "192.168.56.1",
-                "Charles", "192.168.56.1"
+//                "Tim", "130.195.6.192",
+//                "Bob", "130.195.6.176",
+//                "Charles", "130.195.6.135"
                 //Alice stays local
         ));
 
