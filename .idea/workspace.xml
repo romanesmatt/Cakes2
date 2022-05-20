@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="task2" />
+      <artifact name="task3" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -11,7 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3cb93102-2872-4f26-a87f-de61b902ba72" name="Changes" comment="more commits">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ass4TempTask2" beforeDir="false" afterPath="$PROJECT_DIR$/Ass4TempTask2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ass4TempTask3" beforeDir="false" afterPath="$PROJECT_DIR$/Ass4TempTask3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Alice.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Alice.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Bob.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Bob.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Charles.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Cakes2/cakes/akkaCakes/Charles.class" afterDir="false" />
