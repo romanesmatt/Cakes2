@@ -136,7 +136,7 @@ class Charles extends Producer<Cake> {
 
     ActorRef alice;
     //    Bob object for Task 2
-    ActorRef bob;
+//    ActorRef bob;
 
     //    The four Bob objects
     ActorRef bobOne;
@@ -185,8 +185,8 @@ class Charles extends Producer<Cake> {
 
 //                    getSugar() method for Bob object in Task 2
                     //Comment out for Task 3
-                    CompletableFuture<?> getSugarTaskTwo = Patterns.ask(bob, "GiveOne",
-                            Duration.ofMillis(100000)).toCompletableFuture();
+//                    CompletableFuture<?> getSugarTaskTwo = Patterns.ask(bob, "GiveOne",
+//                            Duration.ofMillis(100000)).toCompletableFuture();
 
 //                    getSugar() methods for the Bob objects in Task 3
                     //Comment out for Task 2
@@ -290,16 +290,16 @@ public class Cakes {
     public static Gift computeGift(int hunger) {
         ActorSystem s = AkkaConfig.newSystem("Cakes", 2501, Map.of(
 //                Comment out IP Addresses to work on assignment locally.
-//                "Tim", "192.168.56.1",
-//                "Bob", "192.168.56.1",
-//                "Charles", "192.168.56.1"
+                "Tim", "192.168.56.1",
+                "Bob", "192.168.56.1",
+                "Charles", "192.168.56.1"
                 //Alice stays local
         ));
 
         ActorRef alice = s.actorOf(Props.create(Alice.class, () -> new Alice(1000)), "Alice"); //makes wheat
 
 //        Comment out for Task 3
-        ActorRef bob = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "Bob"); //makes sugar
+//        ActorRef bob = s.actorOf(Props.create(Bob.class, () -> new Bob(1000)), "Bob"); //makes sugar
 
 
 //        Create four Bob objects to test on local machine
@@ -311,9 +311,9 @@ public class Cakes {
 
 
         //Makes cake with wheat and sugar
-//        Comment out for Task 3
+//        Comment out for Task 2
         ActorRef charles = s.actorOf(Props.create(Charles.class, () -> new Charles(1000, bobOne, bobTwo, bobThree, bobFour, alice)), "Charles");
-
+// Comment out for Task 3
 //        ActorRef charles = s.actorOf(Props.create(Charles.class, () -> new Charles(1000, bob, alice)), "Charles");
 
         //tim wants to eat cakes
@@ -332,7 +332,7 @@ public class Cakes {
             //When complete, murder them all with a PoisonPill sent by no one.
             alice.tell(PoisonPill.getInstance(), ActorRef.noSender());
 //            Task 2: Bob object
-            bob.tell(PoisonPill.getInstance(), ActorRef.noSender());
+//            bob.tell(PoisonPill.getInstance(), ActorRef.noSender());
 //            Task 3: Four Bob objects only for running on local machine
             bobOne.tell(PoisonPill.getInstance(), ActorRef.noSender());
             bobTwo.tell(PoisonPill.getInstance(), ActorRef.noSender());

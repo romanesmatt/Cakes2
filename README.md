@@ -27,6 +27,8 @@ Exception in thread "main" com.typesafe.config.ConfigException$Missing: No confi
 To run these jar files, you may have to create a new project in your IDE, convert the jar files to a .zip file 
 and place the cakes directory inside the project's src folder.
 
+Apologies for any inconvenience.
+
 ## Instructions:
 1. Import task2.jar and task3.jar as a project for IntelliJ.
 2. Ensure that the jars file's libraries are added to the project's classpath. If not, right click on the jars directory and click "Add as Library... ".
