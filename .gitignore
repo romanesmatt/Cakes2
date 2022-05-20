@@ -11,3 +11,5 @@ out/production/Cakes2/cakes/akkaCakes/Cakes.class
 out/production/Cakes2/cakes/akkaCakes/Cakes.class
 *.MF
 *.MF
+.DS_Store
+src/.DS_Store
